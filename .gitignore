@@ -1,0 +1,23 @@
+# Зависимости
+node_modules/
+venv/
+__pycache__/
+
+# Окружение
+.env
+.env.local
+
+# Логи и кэш
+logs/
+*.log
+.cache/
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+*.swp
+
+# Сборка
+dist/
+build/
