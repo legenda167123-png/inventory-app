@@ -1,5 +1,6 @@
 ﻿import { NavLink, Routes, Route, Navigate } from 'react-router-dom';
 import Products from './pages/Products.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
 import Warehouses from './pages/Warehouses.jsx';
 import WarehouseDetail from './pages/WarehouseDetail.jsx';
 import Operations from './pages/Operations.jsx';
@@ -19,6 +20,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/products" replace />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/warehouses" element={<Warehouses />} />
           <Route path="/warehouses/:id" element={<WarehouseDetail />} />
           <Route path="/receipts" element={<Operations type="receipt" />} />

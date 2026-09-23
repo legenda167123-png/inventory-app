@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import Modal from '../components/Modal.jsx';
 
@@ -162,7 +163,15 @@ export default function Operations({ type }) {
                   <td>{new Date(o.created_at).toLocaleString('ru-RU')}</td>
                   <td>{o.source_name || '—'}</td>
                   <td>{o.destination_name || '—'}</td>
-                  <td>{o.items.map((it) => `${it.sku} × ${it.quantity}`).join(', ')}</td>
+                                    <td>
+                    {o.items.map((it, idx) => (
+                      <span key={it.product_id}>
+                        {idx > 0 && ', '}
+                        <Link to={`/products/${it.product_id}`}>{it.sku}</Link>
+                        {' × '}{it.quantity}
+                      </span>
+                    ))}
+                  </td>
                   <td>{STATUS_LABELS[o.status] || o.status}</td>
                   <td>{o.created_by}</td>
                   <td>
@@ -277,3 +286,4 @@ export default function Operations({ type }) {
     </>
   );
 }
+

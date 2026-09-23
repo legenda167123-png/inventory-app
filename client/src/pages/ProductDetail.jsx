@@ -1,9 +1,14 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { api } from '../api.js';
-import EditWarehouseModal from '../components/EditWarehouseModal.jsx';
+import EditProductModal from '../components/EditProductModal.jsx';
 
-export default function WarehouseDetail() {
+function fmt(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  return v;
+}
+
+export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
@@ -11,7 +16,7 @@ export default function WarehouseDetail() {
   const [showEdit, setShowEdit] = useState(false);
 
   function load() {
-    api.getWarehouse(id)
+    api.getProduct(id)
       .then(setData)
       .catch((e) => setError(e.message));
   }
@@ -21,13 +26,13 @@ export default function WarehouseDetail() {
   if (error) return <div className="error">Ошибка: {error}</div>;
   if (!data) return <p>Загрузка…</p>;
 
-  const { warehouse, stock } = data;
-  const attrs = warehouse.attributes || {};
+  const { product, stock } = data;
+  const attrs = product.attributes || {};
   const attrEntries = Object.entries(attrs);
 
   return (
     <>
-      <p><Link to="/warehouses">← К списку складов</Link></p>
+      <p><Link to="/products">← К списку номенклатуры</Link></p>
 
       <div style={{
         background: 'white', borderRadius: 8, padding: 20, marginBottom: 20,
@@ -35,33 +40,21 @@ export default function WarehouseDetail() {
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h1 style={{ margin: 0 }}>{warehouse.name}</h1>
-            {warehouse.location && (
-              <p style={{ color: '#555', margin: '6px 0 0' }}>{warehouse.location}</p>
-            )}
+            <h1 style={{ margin: 0 }}>{product.name}</h1>
+            <p style={{ color: '#555', margin: '6px 0 0' }}>
+              Артикул: <b>{product.sku}</b>
+              {product.barcode && <> · Штрихкод: {product.barcode}</>}
+            </p>
           </div>
           <button onClick={() => setShowEdit(true)}>Редактировать</button>
         </div>
 
         <div style={{ marginTop: 16, display: 'grid', gridTemplateColumns: '180px 1fr', gap: '6px 16px', fontSize: 14 }}>
-          {warehouse.contact_person && (
-            <>
-              <div style={{ color: '#777' }}>Контактное лицо</div>
-              <div>{warehouse.contact_person}</div>
-            </>
-          )}
-          {warehouse.phone && (
-            <>
-              <div style={{ color: '#777' }}>Телефон</div>
-              <div>{warehouse.phone}</div>
-            </>
-          )}
-          {warehouse.working_hours && (
-            <>
-              <div style={{ color: '#777' }}>Часы работы</div>
-              <div>{warehouse.working_hours}</div>
-            </>
-          )}
+          <div style={{ color: '#777' }}>Ширина, мм</div><div>{fmt(product.width_mm)}</div>
+          <div style={{ color: '#777' }}>Высота, мм</div><div>{fmt(product.height_mm)}</div>
+          <div style={{ color: '#777' }}>Глубина, мм</div><div>{fmt(product.depth_mm)}</div>
+          <div style={{ color: '#777' }}>Объём, м³</div><div>{fmt(product.volume_m3)}</div>
+          <div style={{ color: '#777' }}>Вес, кг</div><div>{fmt(product.weight_kg)}</div>
           {attrEntries.map(([k, v]) => (
             <React.Fragment key={k}>
               <div style={{ color: '#777' }}>{k}</div>
@@ -71,30 +64,26 @@ export default function WarehouseDetail() {
         </div>
       </div>
 
-      <h2 style={{ fontSize: 18 }}>Остатки</h2>
+      <h2 style={{ fontSize: 18 }}>Остатки по складам</h2>
       {stock.length === 0 ? (
-        <p>На этом складе пока нет остатков.</p>
+        <p>Товара нет ни на одном складе.</p>
       ) : (
         <table>
           <thead>
             <tr>
-              <th>Артикул</th>
-              <th>Название</th>
+              <th>Склад</th>
+              <th>Адрес</th>
               <th>Количество</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {stock.map((s) => (
-              <tr key={s.product_id}>
-                <td>{s.sku}</td>
-                <td>
-                  <Link to={`/products/${s.product_id}`}>{s.name}</Link>
-                </td>
+              <tr key={s.warehouse_id}>
+                <td>{s.warehouse_name}</td>
+                <td>{s.warehouse_location || '—'}</td>
                 <td>{s.quantity}</td>
-                <td>
-                  <Link to={`/products/${s.product_id}`}>Открыть товар</Link>
-                </td>
+                <td><Link to={`/warehouses/${s.warehouse_id}`}>Открыть склад</Link></td>
               </tr>
             ))}
           </tbody>
@@ -102,11 +91,11 @@ export default function WarehouseDetail() {
       )}
 
       {showEdit && (
-        <EditWarehouseModal
-          warehouse={warehouse}
+        <EditProductModal
+          product={product}
           onClose={() => setShowEdit(false)}
           onSaved={load}
-          onDeleted={() => navigate('/warehouses')}
+          onDeleted={() => navigate('/products')}
         />
       )}
     </>

@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import Modal from '../components/Modal.jsx';
 import ImportProductsModal from '../components/ImportProductsModal.jsx';
@@ -65,6 +66,7 @@ export default function Products() {
                 <th>Штрихкод</th>
                 <th>Название</th>
                 <th>Вес, кг</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -73,8 +75,13 @@ export default function Products() {
                   <td>{p.id}</td>
                   <td>{p.sku}</td>
                   <td>{p.barcode || '—'}</td>
-                  <td>{p.name}</td>
+                  <td>
+                    <Link to={`/products/${p.id}`}>{p.name}</Link>
+                  </td>
                   <td>{p.weight_kg || '—'}</td>
+                  <td>
+                    <Link to={`/products/${p.id}`}>Открыть</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

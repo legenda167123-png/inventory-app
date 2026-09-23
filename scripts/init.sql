@@ -1,9 +1,13 @@
 -- Склады
 CREATE TABLE warehouses (
-    id          SERIAL PRIMARY KEY,
-    name        VARCHAR(200) NOT NULL UNIQUE,
-    location    VARCHAR(500),
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    id              SERIAL PRIMARY KEY,
+    name            VARCHAR(200) NOT NULL UNIQUE,
+    location        VARCHAR(500),
+    contact_person  VARCHAR(200),
+    phone           VARCHAR(50),
+    working_hours   VARCHAR(200),
+    attributes      JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Номенклатура

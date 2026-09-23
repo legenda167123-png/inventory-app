@@ -1,25 +1,14 @@
-# 📦 Inventory App (Товарный учет)
+# Inventory App (Товарный учёт)
 
-Система для управления товарными остатками, складами и движениями.
+Система управления товарными остатками, складами и операциями.
 
-## 🚀 Быстрый старт
+**Статус:** MVP готов. Дальнейшая разработка — точечные доработки.
 
-1. Скопируйте переменные окружения:
-   ```bash
-   cp .env.example .env
-   ```
-2. Запустите базу данных и кэш:
-   ```bash
-   docker-compose up -d
-   ```
-3. Установите зависимости и запустите сервер/клиент:
-   ```bash
-   cd server && npm install && npm run dev
-   cd ../client && npm install && npm run dev
-   ```
+## Стек
 
-## 📁 Структура
-- `client/` - Фронтенд
-- `server/` - Бэкенд
-- `docs/` - Документация и API
-- `scripts/` - SQL скрипты и миграции
+- **Frontend**: React 18 + Vite + React Router
+- **Backend**: Node.js + Express + pg + multer + xlsx
+- **Database**: PostgreSQL 15
+- **Cache**: Redis 7 (не используется в MVP)
+- **Инфраструктура**: Docker Compose
+

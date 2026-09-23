@@ -7,18 +7,25 @@ async function request(path, options = {}) {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`HTTP ${res.status}: ${text}`);
+    let msg = text;
+    try { msg = JSON.parse(text).error || text; } catch {}
+    throw new Error(msg);
   }
   return res.json();
 }
 
 export const api = {
   getProducts: () => request('/products'),
+  getProduct: (id) => request(`/products/${id}`),
   createProduct: (data) => request('/products', { method: 'POST', body: JSON.stringify(data) }),
+  updateProduct: (id, data) => request(`/products/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  deleteProduct: (id) => request(`/products/${id}`, { method: 'DELETE' }),
 
   getWarehouses: () => request('/warehouses'),
   getWarehouse: (id) => request(`/warehouses/${id}`),
   createWarehouse: (data) => request('/warehouses', { method: 'POST', body: JSON.stringify(data) }),
+  updateWarehouse: (id, data) => request(`/warehouses/${id}`, { method: 'PATCH', body: JSON.stringify(data) }),
+  deleteWarehouse: (id) => request(`/warehouses/${id}`, { method: 'DELETE' }),
 
   getOperations: () => request('/operations'),
   createOperation: (data) => request('/operations', { method: 'POST', body: JSON.stringify(data) }),
